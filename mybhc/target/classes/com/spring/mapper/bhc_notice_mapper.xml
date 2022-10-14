@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.notice">
+
+	<!-- select -->
+	<select id="list" parameterType="map" resultType="com.mybhc.vo.BhcNoticeVO">
+		select rno, nid, ntitle, nhits, ndate
+		from (select rownum rno, nid, ntitle, nhits,to_char(ndate,'yyyy-mm-dd')
+		ndate
+		from (select nid, ntitle, nhits,ndate from bhc_notice
+		order by ndate desc))
+		  where rno between #{start} and #{end} 
+	</select>
+
+ 	 
+ 	<!-- insert -->
+	<insert id="insert" parameterType="com.mybhc.vo.BhcNoticeVO">
+		insert into bhc_notice
+		values(sequ_bhc_board.nextval, #{ntitle}, #{ncontent}, #{nfile}, #{nsfile}, 0, sysdate)
+	</insert> 
+
+ 	<!-- totalcount -->
+	<select id="totalcount" resultType="int">
+		select count(*) from bhc_notice
+	</select>
+	
+	<!-- notice updatehits -->
+	<update id="updatehits" parameterType="java.lang.String">
+		update bhc_notice set nhits=nhits+1  where nid=#{nid}
+	</update> 
+	
+	<!-- <select id="select" parameterType="" resultType="">
+		select nid,ntitle,ncontent,nhits,ndate from bhc_notice where nid = #{nid} 
+	</select> -->
+</mapper>

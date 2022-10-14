@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="mapper.admin">
+	<!-- update -->
+	<update id="update" parameterType="com.mybhc.vo.BhcAdminMenuVO">
+		update bhc_admin_menu set mname=#{mname},mcontent=#{mcontent}, mfile=#{mfile}, msfile=#{msfile} 
+				 where mid=#{mid}
+	</update>
+	
+	<select id="content" parameterType="java.lang.String" resultType="com.mybhc.vo.BhcAdminMenuVO">
+		select mid, mname, mpay, mfile, msfile, mcontent, mdate 
+				 from bhc_admin_menu where mid=#{mid}
+	</select>
+	
+	<!-- select -->
+	<select id="list" parameterType="map" resultType="com.mybhc.vo.BhcAdminMenuVO">
+		select rno, mid, mname, mpay, mfile, msfile, mcontent, mdate
+		from (select rownum rno, mid, mname, mpay, mfile, msfile, mcontent,to_char(mdate,'yyyy-mm-dd')
+		mdate
+		from (select mid, mname, mpay, mfile, msfile, mcontent, mdate from bhc_admin_menu
+		order by mdate desc))
+        where rno between #{start} and #{end}
+	</select>
+	
+	<!-- insert -->
+	<insert id="insert" parameterType="com.mybhc.vo.BhcAdminMenuVO">
+		insert into bhc_admin_menu 
+				 values('m_'||sequ_bhc_admin_menu.nextval,#{mname},#{mpay},'0','0',#{mcontent},sysdate)
+	</insert>
+	
+</mapper>
+	
